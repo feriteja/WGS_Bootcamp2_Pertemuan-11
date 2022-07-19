@@ -70,27 +70,6 @@ router.post("/update/:userID", contactValidator, async (req, res) => {
         contact: req.body,
       });
     }
-
-    console.log(
-      `🚀 ---------------------------------------------------------------------🚀`
-    );
-    console.log(
-      `🚀 ~ file: contact.js ~ line 75 ~ router.post ~ newContact`,
-      newContact
-    );
-    console.log(
-      `🚀 ---------------------------------------------------------------------🚀`
-    );
-    console.log(
-      `🚀 -------------------------------------------------------------------------🚀`
-    );
-    console.log(
-      `🚀 ~ file: contact.js ~ line 75 ~ router.post ~ existContact`,
-      existContact
-    );
-    console.log(
-      `🚀 -------------------------------------------------------------------------🚀`
-    );
     if (JSON.stringify(existContact) === JSON.stringify(newContact)) {
       res.redirect("/contact");
       return;
@@ -125,12 +104,7 @@ router.post("/:userID", async (req, res) => {
   try {
     const contact = req.params.userID;
 
-    const isDeleted = await deleteContact(contact);
-
-    if (isDeleted) {
-      res.status(404).render("errorPage");
-      console.log("masuk");
-    }
+    await deleteContact(contact);
 
     res.redirect("/contact?deleted=success");
   } catch (error) {

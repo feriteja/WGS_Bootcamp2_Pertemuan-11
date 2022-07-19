@@ -8,10 +8,13 @@ const contactValidator = async (req, res, next) => {
     const { name, email, mobile } = req.body;
     const newContact = req.body;
     const userID = req.params.userID;
-    console.log(newContact);
 
-    const contacts = await getContact();
-    const isNameDuplicate = contacts.some((cons) => cons.name.trim() === name);
+    const existedUser = await pool.query(
+      `SELECT name FROM contact WHERE name = '${name}'`
+    );
+
+    const isNameDuplicate = existedUser.rows.length > 0 ? true : false;
+
     const isEmailValid = validator.isEmail(email);
     const isNumber = validator.isMobilePhone(mobile, "id-ID");
     req.errorMessage = [];
