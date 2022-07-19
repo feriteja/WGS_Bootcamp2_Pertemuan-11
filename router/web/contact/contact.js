@@ -10,8 +10,8 @@ const {
 const router = express.Router();
 
 //! GET ALL USER
-router.get("/", (req, res) => {
-  const contacts = getContact();
+router.get("/", async (req, res) => {
+  const contacts = await getContact();
   let message = "";
   if (req.query.added) message = "user has been added";
   if (req.query.updated) message = "user has been updated";
@@ -26,7 +26,7 @@ router.get("/", (req, res) => {
 });
 
 //! ADD USER FUNC
-router.post("/", contactValidator, (req, res) => {
+router.post("/", contactValidator, async (req, res) => {
   const message = req.errorMessage;
 
   if (message.length > 0) {
@@ -37,7 +37,7 @@ router.post("/", contactValidator, (req, res) => {
   }
   addContact(req.body);
 
-  const contacts = getContact();
+  const contacts = await getContact();
 
   res.redirect("/contact?added=success");
 });
@@ -48,43 +48,66 @@ router.get("/add", (req, res) => {
 });
 
 //! UPDATE USER PAGE
-router.get("/update/:userID", (req, res) => {
+router.get("/update/:userID", async (req, res) => {
   const userID = req.params.userID;
-  const contacts = getContact();
+  const contact = await getContactDetail(userID);
 
-  const contact = contacts.find((contact) => contact.name === userID);
   res.render("contactUpdate", { userID: userID, contact: contact });
 });
 
 //! UPDATE USER FUNC
-router.post("/update/:userID", contactValidator, (req, res) => {
-  const userID = req.params.userID;
-  const newContact = req.body;
-  const existContact = getContactDetail(userID);
-  const message = req.errorMessage;
+router.post("/update/:userID", contactValidator, async (req, res) => {
+  try {
+    const userID = req.params.userID;
+    const newContact = req.body;
+    const existContact = await getContactDetail(userID);
+    const message = req.errorMessage;
 
-  if (message.length > 0) {
-    return res.render("contactUpdate", {
-      message: message,
-      userID: userID,
-      contact: req.body,
-    });
+    if (message.length > 0) {
+      return res.render("contactUpdate", {
+        message: message,
+        userID: userID,
+        contact: req.body,
+      });
+    }
+
+    console.log(
+      `🚀 ---------------------------------------------------------------------🚀`
+    );
+    console.log(
+      `🚀 ~ file: contact.js ~ line 75 ~ router.post ~ newContact`,
+      newContact
+    );
+    console.log(
+      `🚀 ---------------------------------------------------------------------🚀`
+    );
+    console.log(
+      `🚀 -------------------------------------------------------------------------🚀`
+    );
+    console.log(
+      `🚀 ~ file: contact.js ~ line 75 ~ router.post ~ existContact`,
+      existContact
+    );
+    console.log(
+      `🚀 -------------------------------------------------------------------------🚀`
+    );
+    if (JSON.stringify(existContact) === JSON.stringify(newContact)) {
+      res.redirect("/contact");
+      return;
+    }
+
+    updateContact(userID, newContact);
+
+    res.redirect("/contact?updated=success");
+  } catch (error) {
+    console.log("error", error);
   }
-
-  if (JSON.stringify(existContact) === JSON.stringify(newContact)) {
-    res.redirect("/contact");
-    return;
-  }
-
-  updateContact(userID, newContact);
-
-  res.redirect("/contact?updated=success");
 });
 
 //! GET USER DETAIL
-router.get("/:userID", (req, res) => {
+router.get("/:userID", async (req, res) => {
   const userID = req.params.userID;
-  const user = getContactDetail(userID);
+  const user = await getContactDetail(userID);
 
   if (!user) {
     res.status(404).render("errorPage", { message: "user not found" });
@@ -98,14 +121,21 @@ router.get("/:userID", (req, res) => {
 });
 
 //! DELETE  USER
-router.post("/:userID", (req, res) => {
-  const contact = req.params.userID;
+router.post("/:userID", async (req, res) => {
+  try {
+    const contact = req.params.userID;
 
-  const isDeleted = deleteContact(contact);
+    const isDeleted = await deleteContact(contact);
 
-  if (!isDeleted) res.status(404).render("errorPage");
+    if (isDeleted) {
+      res.status(404).render("errorPage");
+      console.log("masuk");
+    }
 
-  res.redirect("/contact?deleted=success");
+    res.redirect("/contact?deleted=success");
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;

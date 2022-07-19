@@ -1,32 +1,32 @@
 const express = require("express");
-var morgan = require("morgan");
+const morgan = require("morgan");
+const expressLayouts = require("express-ejs-layouts");
+const pool = require("./db");
 const contact = require("./router/web/contact/contact");
 
-var expressLayouts = require("express-ejs-layouts");
 const { getContact } = require("./function/contactHandler");
 
 const app = express();
 const port = 3000;
 
-app.set("view engine", "ejs");
-app.set("layout extractScripts", true);
-app.set("layout extractStyles", true);
-
 app.use(expressLayouts);
-
 app.use("/public", express.static("public"));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // app.use(morgan("dev"));
-
 // app.use((req, res, next) => {
 //   console.log("Time:", Date.now());
 //   next();
 // });
 
+app.set("view engine", "ejs");
+app.set("layout extractScripts", true);
+app.set("layout extractStyles", true);
+
 //! Home page
-app.get("/", (req, res) => {
-  const contacts = getContact();
+app.get("/", async (req, res) => {
+  const contacts = await getContact();
 
   res.render("index", {
     name: "Feri Teja Kusuma",
