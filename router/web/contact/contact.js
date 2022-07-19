@@ -36,15 +36,13 @@ router.post(
   async (req, res) => {
     const message = req.errorMessage;
 
-    console.log(req.file);
-
     if (message.length > 0) {
       return res.render("contactAdd", {
         message: message,
         params: req.body,
       });
     }
-    await addContact(req.body, req.file.path);
+    await addContact(req.body, `public/upload/images/${req.file.originalname}`);
 
     res.redirect("/contact?added=success");
   }

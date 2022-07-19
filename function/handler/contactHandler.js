@@ -12,7 +12,7 @@ const getContact = async () => {
 
 const getContactDetail = async (userID) => {
   const user = await pool.query(
-    `SELECT name, email, mobile FROM contact WHERE name = '${userID}'`
+    `SELECT * FROM contact WHERE name = '${userID}'`
   );
 
   return user.rows[0];
