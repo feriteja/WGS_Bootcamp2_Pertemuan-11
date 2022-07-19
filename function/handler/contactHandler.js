@@ -1,38 +1,4 @@
-const fs = require("fs");
-const pool = require("../db");
-const validator = require("validator");
-
-//! MidleWare
-const contactValidator = async (req, res, next) => {
-  try {
-    const { name, email, mobile } = req.body;
-    const newContact = req.body;
-    const userID = req.params.userID;
-
-    const existedUser = await pool.query(
-      `SELECT name FROM contact WHERE name = '${name}'`
-    );
-
-    const isNameDuplicate = existedUser.rows.length > 0 ? true : false;
-
-    const isEmailValid = validator.isEmail(email);
-    const isNumber = validator.isMobilePhone(mobile, "id-ID");
-    req.errorMessage = [];
-    if (isNameDuplicate && userID !== newContact.name) {
-      req.errorMessage.push("Name is Duplicated, Please enter something else");
-    }
-    if (!isEmailValid) {
-      req.errorMessage.push("Email is not valid");
-    }
-    if (!isNumber && mobile) {
-      req.errorMessage.push("Number is not valid");
-    }
-    next();
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-};
+const pool = require("../../db");
 
 const getContact = async () => {
   try {
@@ -91,7 +57,7 @@ const updateContact = async (userID, contactInput) => {
 module.exports = {
   getContact,
   addContact,
-  contactValidator,
+
   deleteContact,
   getContactDetail,
   updateContact,

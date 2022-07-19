@@ -15,7 +15,7 @@
 </div>
 <% } %> <% let value ; %> <% if (locals.params) { value = params } %>
 
-<form method="post" action="/contact">
+<form method="post" action="/contact" enctype="multipart/form-data">
   <div class="col-md-4 mt-3">
     <label for="validationDefaultUsername" class="form-label">User Name</label>
     <div class="input-group">
@@ -50,6 +50,21 @@
       <input
         name="mobile"
         type="number"
+        class="form-control"
+        id="validationDefaultMobile"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= value?.mobile %>"
+      />
+    </div>
+  </div>
+
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultMobile" class="form-label">avatar</label>
+    <div class="input-group">
+      <input
+        name="avatar"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
         class="form-control"
         id="validationDefaultMobile"
         aria-describedby="inputGroupPrepend2"

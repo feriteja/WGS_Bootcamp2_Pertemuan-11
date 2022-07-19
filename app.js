@@ -1,10 +1,9 @@
 const express = require("express");
-const morgan = require("morgan");
 const expressLayouts = require("express-ejs-layouts");
-const pool = require("./db");
+
 const contact = require("./router/web/contact/contact");
 
-const { getContact } = require("./function/contactHandler");
+const { getContact } = require("./function/handler/contactHandler");
 
 const app = express();
 const port = 3000;

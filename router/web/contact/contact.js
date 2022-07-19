@@ -1,12 +1,15 @@
 const express = require("express");
 const {
-  contactValidator,
   deleteContact,
   getContactDetail,
   getContact,
   addContact,
   updateContact,
-} = require("../../../function/contactHandler");
+} = require("../../../function/handler/contactHandler");
+const {
+  contactValidator,
+  uploadMulter,
+} = require("../../../function/middleware/middleware");
 const router = express.Router();
 
 //! GET ALL USER
@@ -26,7 +29,7 @@ router.get("/", async (req, res) => {
 });
 
 //! ADD USER FUNC
-router.post("/", contactValidator, async (req, res) => {
+router.post("/", uploadMulter.any(), contactValidator, async (req, res) => {
   const message = req.errorMessage;
 
   if (message.length > 0) {
@@ -35,9 +38,7 @@ router.post("/", contactValidator, async (req, res) => {
       params: req.body,
     });
   }
-  addContact(req.body);
-
-  const contacts = await getContact();
+  await addContact(req.body);
 
   res.redirect("/contact?added=success");
 });
