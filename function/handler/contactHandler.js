@@ -12,7 +12,7 @@ const getContact = async () => {
 
 const getContactDetail = async (userID) => {
   const user = await pool.query(
-    `SELECT * FROM contact WHERE name = '${userID}'`
+    `SELECT * FROM contact WHERE lower(name) = lower('${userID}')`
   );
 
   return user.rows[0];
@@ -34,7 +34,9 @@ const deleteContact = async (userID) => {
       console.log("user doesn't exist");
       return false;
     }
-    await pool.query(`DELETE FROM contact WHERE name = '${userID}'`);
+    await pool.query(
+      `DELETE FROM contact WHERE lower(name) = lower('${userID}')`
+    );
   } catch (error) {
     console.log(error);
   }
@@ -51,7 +53,7 @@ const updateContact = async (userID, contactInput) => {
     };
 
     await pool.query(
-      `UPDATE contact SET name = '${contact.name}', email = '${contact.email}', mobile='${contact.mobile}' WHERE name ='${userID}' `
+      `UPDATE contact SET name = '${contact.name}', email = '${contact.email}', mobile='${contact.mobile}' WHERE lower(name) = lower('${userID}') `
     );
   } catch (error) {
     console.log(error);
