@@ -41,17 +41,21 @@ const deleteContact = async (userID) => {
 };
 
 const updateContact = async (userID, contactInput) => {
-  const userDetail = await getContactDetail(userID);
+  try {
+    const userDetail = await getContactDetail(userID);
 
-  const contact = {
-    name: contactInput.name || userDetail.name,
-    email: contactInput.email || userDetail.email,
-    mobile: contactInput.mobile || userDetail.mobile,
-  };
+    const contact = {
+      name: contactInput.name || userDetail.name,
+      email: contactInput.email || userDetail.email,
+      mobile: contactInput.mobile || userDetail.mobile,
+    };
 
-  pool.query(
-    `UPDATE contact SET name = '${contact.name}', email = '${contact.email}', mobile='${contact.mobile}' `
-  );
+    await pool.query(
+      `UPDATE contact SET name = '${contact.name}', email = '${contact.email}', mobile='${contact.mobile}' WHERE name ='${userID}' `
+    );
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 module.exports = {
