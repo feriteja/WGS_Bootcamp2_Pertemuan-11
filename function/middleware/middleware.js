@@ -35,20 +35,9 @@ const contactValidator = async (req, res, next) => {
   }
 };
 
-const checkDir = (userFolder) => {
-  const dirPath = `__dirname + "../../../public/upload/${userFolder}/images/"`;
-  const isFolderExist = fs.existsSync(dirPath);
-  if (!isFolderExist) {
-    console.log("Creating folder 'data'");
-    fs.mkdirSync(dirPath);
-  }
-  return dirPath;
-};
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = checkDir(req.body.name);
-    cb(null, dir);
+    cb(null, __dirname + "../../../public/upload/images/");
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);

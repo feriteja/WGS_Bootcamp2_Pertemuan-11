@@ -18,10 +18,10 @@ const getContactDetail = async (userID) => {
   return user.rows[0];
 };
 
-const addContact = async (contact) => {
+const addContact = async (contact, img) => {
   await pool.query(`INSERT INTO public.contact(
-    name,  email,mobile)
-    VALUES ('${contact.name}', '${contact.email}', '${contact.mobile}')`);
+    name, email, mobile, image)
+    VALUES ('${contact.name}', '${contact.email}', '${contact.mobile}','${img}')`);
 };
 
 const deleteContact = async (userID) => {

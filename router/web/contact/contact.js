@@ -29,19 +29,26 @@ router.get("/", async (req, res) => {
 });
 
 //! ADD USER FUNC
-router.post("/", uploadMulter.any(), contactValidator, async (req, res) => {
-  const message = req.errorMessage;
+router.post(
+  "/",
+  uploadMulter.single("avatar"),
+  contactValidator,
+  async (req, res) => {
+    const message = req.errorMessage;
 
-  if (message.length > 0) {
-    return res.render("contactAdd", {
-      message: message,
-      params: req.body,
-    });
+    console.log(req.file);
+
+    if (message.length > 0) {
+      return res.render("contactAdd", {
+        message: message,
+        params: req.body,
+      });
+    }
+    await addContact(req.body, req.file.path);
+
+    res.redirect("/contact?added=success");
   }
-  await addContact(req.body);
-
-  res.redirect("/contact?added=success");
-});
+);
 
 //! TO ADD USER PAGE
 router.get("/add", (req, res) => {
