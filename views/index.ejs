@@ -1,0 +1,24 @@
+<% if (contacts.length>0) { %>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% contacts.forEach((element,idx) => { %>
+    <tr>
+      <th scope="row"><%= idx+1 %></th>
+      <td><%= element.name %></td>
+      <td><%= element.email %></td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<% } else { %>
+<p>not found</p>
+<% }%>

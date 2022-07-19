@@ -1,0 +1,63 @@
+<div>
+  <a href="/contact" class="btn btn-secondary my-1" role="button">
+    <i class="bi bi-backspace"></i> Back</a
+  >
+</div>
+
+<h1>Update contact <%= userID %></h1>
+
+<% if (locals.message) { %>
+
+<div class="alert alert-danger" role="alert">
+  <% message.forEach(element => { %>
+  <h6 class="border-bottom border-secondary my-2"><%= element %></h6>
+
+  <% }) %>
+</div>
+<% } %>
+
+<form method="post" action="/contact/update/<%= userID %>">
+  <div class="col-md-4">
+    <label for="validationDefaultUsername" class="form-label">User Name</label>
+    <div class="input-group">
+      <input
+        name="name"
+        type="text"
+        class="form-control"
+        id="validationDefaultUsername"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= contact.name %>"
+        required
+      />
+    </div>
+  </div>
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultEmail" class="form-label">Email</label>
+    <div class="input-group">
+      <input
+        name="email"
+        type="email"
+        class="form-control"
+        id="validationDefaultEmail"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= contact.email %>"
+        required
+      />
+    </div>
+  </div>
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultMobile" class="form-label">Mobile</label>
+    <div class="input-group">
+      <input
+        name="mobile"
+        type="number"
+        class="form-control"
+        id="validationDefaultMobile"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= contact.mobile %>"
+      />
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>

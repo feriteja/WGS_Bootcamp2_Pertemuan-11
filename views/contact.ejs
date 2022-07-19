@@ -1,0 +1,104 @@
+<h1>Contact List</h1>
+<a href="/contact/add" class="btn btn-primary my-3"
+  ><i class="bi bi-person-plus"></i> Add Contact</a
+>
+
+<% let params %> <% if (contacts.length>0) { %> <% if (message && message !==
+"user has been deleted" ) { %>
+<div class="alert alert-success mt-2" role="alert"><%= message %></div>
+<% } else if(message) {%>
+<div class="alert alert-danger mt-2" role="alert"><%= message %></div>
+<% } %>
+
+<table class="table shadow-sm">
+  <thead>
+    <tr class="">
+      <th scope="col">#</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col" class="text-center">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% contacts.forEach((element,idx) => { %>
+    <tr class="align-items-center">
+      <th scope="row"><%= idx+1 %></th>
+      <td><%= element.name %></td>
+      <td><%= element.email %></td>
+      <td class="d-flex justify-content-center">
+        <a
+          href="/contact/<%= element.name %>"
+          class="btn btn-primary m-2"
+          role="button"
+          >Detail</a
+        >
+        <a
+          href="/contact/update/<%= element.name %>"
+          class="btn btn-warning m-2"
+          role="button"
+        >
+          <i class="bi bi-pencil-square"></i>
+          Edit</a
+        >
+
+        <button
+          type="button"
+          class="btn btn-danger m-2"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal<%=element.name%>"
+        >
+          <i class="bi bi-trash"></i>
+          Delete
+        </button>
+
+        <!-- Modal -->
+        <div
+          class="modal fade"
+          id="exampleModal<%=element.name%>"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  <%= element.name %>
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                are you sure want to delete <%= element.name %>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+
+                <form action="/contact/<%= element.name %>" method="post">
+                  <input type="submit" value="delete" class="btn btn-danger" />
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<% } else { %>
+<p>not found</p>
+<% }%>
+
+<!-- Button trigger modal -->

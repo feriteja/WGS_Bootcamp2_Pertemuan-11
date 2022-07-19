@@ -1,0 +1,75 @@
+<div>
+  <a href="/contact" class="btn btn-secondary my-1" role="button">
+    <i class="bi bi-backspace"></i> Back</a
+  >
+</div>
+
+<h1>Add contact</h1>
+
+<% if (locals.message ) { %>
+
+<div class="alert alert-danger" role="alert">
+  <% message.forEach(element => { %>
+  <h6 class="border-bottom border-secondary my-2"><%= element %></h6>
+  <% }) %>
+</div>
+<% } %> <% let value ; %> <% if (locals.params) { value = params } %>
+
+<form method="post" action="/contact" enctype="multipart/form-data">
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultUsername" class="form-label">User Name</label>
+    <div class="input-group">
+      <input
+        name="name"
+        type="text"
+        class="form-control"
+        id="validationDefaultUsername"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= value?.name %>"
+        required
+      />
+    </div>
+  </div>
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultEmail" class="form-label">Email</label>
+    <div class="input-group">
+      <input
+        name="email"
+        type="email"
+        class="form-control"
+        id="validationDefaultEmail"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= value?.email %>"
+        required
+      />
+    </div>
+  </div>
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultMobile" class="form-label">Mobile</label>
+    <div class="input-group">
+      <input
+        name="mobile"
+        type="number"
+        class="form-control"
+        id="validationDefaultMobile"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= value?.mobile %>"
+      />
+    </div>
+  </div>
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultMobile" class="form-label">Mobile</label>
+    <div class="input-group">
+      <input
+        name="avatar"
+        type="file"
+        class="form-control"
+        id="validationDefaultMobile"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= value?.mobile %>"
+      />
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-2">Submit</button>
+</form>
