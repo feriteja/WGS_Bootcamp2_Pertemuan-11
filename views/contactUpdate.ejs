@@ -16,7 +16,11 @@
 </div>
 <% } %>
 
-<form method="post" action="/contact/update/<%= userID %>">
+<form
+  method="post"
+  action="/contact/update/<%= userID %>"
+  enctype="multipart/form-data"
+>
   <div class="col-md-4">
     <label for="validationDefaultUsername" class="form-label">User Name</label>
     <div class="input-group">
@@ -55,6 +59,21 @@
         id="validationDefaultMobile"
         aria-describedby="inputGroupPrepend2"
         value="<%= contact.mobile %>"
+      />
+    </div>
+  </div>
+  <img src="/<%=contact?.image%>" style="height: 100px; width: 100px" alt="" />
+  <div class="col-md-4 mt-3">
+    <label for="validationDefaultMobile" class="form-label">avatar</label>
+    <div class="input-group">
+      <input
+        name="avatar"
+        type="file"
+        accept="image/png, image/gif, image/jpeg"
+        class="form-control"
+        id="validationDefaultMobile"
+        aria-describedby="inputGroupPrepend2"
+        value="<%= contact?.image %>"
       />
     </div>
   </div>

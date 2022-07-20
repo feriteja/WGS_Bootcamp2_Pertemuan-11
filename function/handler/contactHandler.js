@@ -42,7 +42,7 @@ const deleteContact = async (userID) => {
   }
 };
 
-const updateContact = async (userID, contactInput) => {
+const updateContact = async (userID, contactInput, filePath) => {
   try {
     const userDetail = await getContactDetail(userID);
 
@@ -50,10 +50,11 @@ const updateContact = async (userID, contactInput) => {
       name: contactInput.name || userDetail.name,
       email: contactInput.email || userDetail.email,
       mobile: contactInput.mobile || userDetail.mobile,
+      filePath: contactInput.filePath || filePath,
     };
 
     await pool.query(
-      `UPDATE contact SET name = '${contact.name}', email = '${contact.email}', mobile='${contact.mobile}' WHERE lower(name) = lower('${userID}') `
+      `UPDATE contact SET name = '${contact.name}', email = '${contact.email}', mobile='${contact.mobile}', image='${contact.filePath}' WHERE lower(name) = lower('${userID}') `
     );
   } catch (error) {
     console.log(error);

@@ -58,36 +58,48 @@ router.get("/update/:userID", async (req, res) => {
   const userID = req.params.userID;
   const contact = await getContactDetail(userID);
 
+  if (!contact) {
+    res.status(404).render("errorPage", { message: "user not found" });
+    return;
+  }
+
   res.render("contactUpdate", { userID: userID, contact: contact });
 });
 
 //! UPDATE USER FUNC
-router.post("/update/:userID", contactValidator, async (req, res) => {
-  try {
-    const userID = req.params.userID;
-    const newContact = req.body;
-    const existContact = await getContactDetail(userID);
-    const message = req.errorMessage;
+router.post(
+  "/update/:userID",
+  uploadMulter.single("avatar"),
+  contactValidator,
+  async (req, res) => {
+    try {
+      const userID = req.params.userID;
+      const newContact = req.body;
+      const existContact = await getContactDetail(userID);
+      const message = req.errorMessage;
 
-    if (message.length > 0) {
-      return res.render("contactUpdate", {
-        message: message,
-        userID: userID,
-        contact: req.body,
-      });
+      if (message.length > 0) {
+        return res.render("contactUpdate", {
+          message: message,
+          userID: userID,
+          contact: req.body,
+        });
+      }
+      if (JSON.stringify(existContact) === JSON.stringify(newContact)) {
+        res.redirect("/contact");
+        return;
+      }
+      console.log("file", req.file);
+      const filePath = `public/upload/images/${req.file.originalname}`;
+
+      updateContact(userID, newContact, filePath);
+
+      res.redirect("/contact?updated=success");
+    } catch (error) {
+      console.log("error", error);
     }
-    if (JSON.stringify(existContact) === JSON.stringify(newContact)) {
-      res.redirect("/contact");
-      return;
-    }
-
-    updateContact(userID, newContact);
-
-    res.redirect("/contact?updated=success");
-  } catch (error) {
-    console.log("error", error);
   }
-});
+);
 
 //! GET USER DETAIL
 router.get("/:userID", async (req, res) => {
@@ -96,6 +108,7 @@ router.get("/:userID", async (req, res) => {
 
   if (!user) {
     res.status(404).render("errorPage", { message: "user not found" });
+    return;
   }
 
   res.render("detail", {
@@ -108,9 +121,16 @@ router.get("/:userID", async (req, res) => {
 //! DELETE  USER
 router.post("/:userID", async (req, res) => {
   try {
-    const contact = req.params.userID;
+    const userID = req.params.userID;
 
-    await deleteContact(contact);
+    const user = await getContactDetail(userID);
+
+    if (!user) {
+      res.status(404).render("errorPage", { message: "user not found" });
+      return;
+    }
+
+    await deleteContact(userID);
 
     res.redirect("/contact?deleted=success");
   } catch (error) {
